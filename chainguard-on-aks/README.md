@@ -6,7 +6,9 @@ tags: kubernetes, azure, security, devops
 cover_image: https://raw.githubusercontent.com/sathpal/azure-articles/main/chainguard-on-aks/img/cover.png
 ---
 
-I watched the *Cloud Native Partner Showcase* episode where Microsoft's David Giard talks to Hannah Hawken and Manfred Moser from Chainguard about secure-by-default container images on Azure Kubernetes Service. Good conversation, but I wanted numbers I produced myself. So I built the smallest possible demo that proves or disproves the pitch, and this post is that demo, step by step, with the actual output.
+I watched the [*Cloud Native Partner Showcase* episode](https://www.youtube.com/watch?v=-dMyVMPeUug&t=320s) where Microsoft's David Giard talks to Hannah Hawken and Manfred Moser from Chainguard about secure-by-default container images on Azure Kubernetes Service. Good conversation, but I wanted numbers I produced myself. So I built the smallest possible demo that proves or disproves the pitch, and this post is that demo, step by step, with the actual output.
+
+{% youtube -dMyVMPeUug %}
 
 Everything below runs on a laptop with Docker. The Azure part is optional and takes about ten minutes.
 

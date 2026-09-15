@@ -6,7 +6,7 @@ Paste the block below as the post text. Attach `img/01-compare.png` (the 178 vs 
 
 Same app. Same code. Two base images. 178 known CVEs vs 5.
 
-I kept hearing the pitch: "Chainguard images are minimal, signed, rebuilt daily, most CVEs never reach your cluster." Marketing or real? I stopped guessing and built the smallest demo that could prove it wrong.
+It started with a Cloud Native Partner Showcase episode: Microsoft's David Giard talking to Hannah Hawken and Manfred Moser from Chainguard about secure-by-default images on AKS. The pitch: "minimal, signed, rebuilt daily, most CVEs never reach your cluster." Marketing or real? I stopped guessing and built the smallest demo that could prove it wrong.
 
 What I did, in one afternoon:
 
@@ -31,6 +31,7 @@ Everything is reproducible. Clone, run make demo, get today's numbers. No Azure 
 
 Full walkthrough with every command and screenshot: [article link]
 Repo: https://github.com/sathpal/chainguard-aks-demo
+The episode that started it: https://www.youtube.com/watch?v=-dMyVMPeUug&t=320s
 
 If you run it and your numbers differ, that is the point. Both images change every day. Only one of them changes in your favour.
 
