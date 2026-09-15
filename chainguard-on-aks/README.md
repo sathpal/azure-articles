@@ -3,7 +3,7 @@ title: "Same app, two base images: 178 CVEs vs 5. A hands-on Chainguard on AKS w
 published: false
 description: "Step by step: build one FastAPI app on python:3.13-slim and on a Chainguard image, scan, verify signatures, ship SBOMs, deploy to AKS behind a Kyverno policy, and let an AI agent skill do the migration."
 tags: kubernetes, azure, security, devops
-cover_image: https://raw.githubusercontent.com/sathpal/azure-articles/main/chainguard-on-aks/img/09-report.png
+cover_image: https://raw.githubusercontent.com/sathpal/azure-articles/main/chainguard-on-aks/img/cover.png
 ---
 
 I watched the *Cloud Native Partner Showcase* episode where Microsoft's David Giard talks to Hannah Hawken and Manfred Moser from Chainguard about secure-by-default container images on Azure Kubernetes Service. Good conversation, but I wanted numbers I produced myself. So I built the smallest possible demo that proves or disproves the pitch, and this post is that demo, step by step, with the actual output.
