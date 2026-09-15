@@ -10,7 +10,7 @@ I watched the [*Cloud Native Partner Showcase* episode](https://www.youtube.com/
 
 {% youtube -dMyVMPeUug %}
 
-Everything below runs on a laptop with Docker. The Azure part is optional and takes about ten minutes.
+The destination is Azure Kubernetes Service. The first steps build the evidence on your machine so you can see the difference before it reaches a cluster; the later steps put both images on AKS behind public load balancers and a Kyverno admission policy.
 
 **Repo:** [github.com/sathpal/chainguard-aks-demo](https://github.com/sathpal/chainguard-aks-demo)
 
@@ -388,7 +388,9 @@ Who should wait: teams whose apps genuinely need a shell or system packages at r
 
 ```bash
 git clone https://github.com/sathpal/chainguard-aks-demo && cd chainguard-aks-demo
-make tools && make demo     # build, scan, verify, sbom, report. No Azure required.
+make tools && make demo                                  # build, scan, verify, sbom, report
+cp .env.example .env                                     # set your registry name and region
+make aks-up && make acr-push && make deploy && make policy   # the AKS part, then make aks-down
 ```
 
 If your numbers differ from mine, that is expected. The whole point is that both images change every day, and only one of them changes in your favour.
