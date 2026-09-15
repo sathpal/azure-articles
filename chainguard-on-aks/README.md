@@ -203,6 +203,8 @@ aks-nodepool1-13038109-vmss000000   Ready    <none>   7m17s   v1.35.7
 aks-nodepool1-13038109-vmss000001   Ready    <none>   7m16s   v1.35.7
 ```
 
+![az aks list, kubectl get nodes, pods and services with public IPs](https://raw.githubusercontent.com/sathpal/azure-articles/main/chainguard-on-aks/img/12-aks-cluster.png)
+
 The Chainguard deployment can turn on every hardening knob because the image cooperates:
 
 ```yaml
@@ -265,6 +267,18 @@ $ curl -s http://98.70.244.97/api
 }
 ```
 
+![curl /api on both public IPs](https://raw.githubusercontent.com/sathpal/azure-articles/main/chainguard-on-aks/img/14-aks-api.png)
+
+The same page from Step 8, now served by AKS through a public load balancer:
+
+![upstream app page served from AKS](https://raw.githubusercontent.com/sathpal/azure-articles/main/chainguard-on-aks/img/10-aks-app-upstream.png)
+
+![chainguard app page served from AKS](https://raw.githubusercontent.com/sathpal/azure-articles/main/chainguard-on-aks/img/11-aks-app-chainguard.png)
+
+And the on-call moment. `kubectl exec` into the upstream pod gives you a root shell with `apt-get`. The same command on the Chainguard pod has nothing to run:
+
+![kubectl exec: no sh in the Chainguard pod, root shell in the upstream pod](https://raw.githubusercontent.com/sathpal/azure-articles/main/chainguard-on-aks/img/15-aks-exec.png)
+
 ## Step 10: enforce it with Kyverno
 
 Scanning tells you. Admission control stops you. Two Kyverno policies:
@@ -317,6 +331,8 @@ $ kubectl -n chainguard-demo get pod nginx-signed
 NAME           READY   STATUS    RESTARTS   AGE
 nginx-signed   1/1     Running   0          8s
 ```
+
+![Kyverno rejects Docker Hub nginx, admits signed cgr.dev nginx, both policies Ready](https://raw.githubusercontent.com/sathpal/azure-articles/main/chainguard-on-aks/img/13-aks-kyverno.png)
 
 One more real-world note: the namespace also carries the Pod Security Standards labels (`enforce: baseline`, `warn: restricted`). Every `kubectl apply` for the upstream deployment prints a warning that it would violate `restricted`. The Chainguard deployment is silent. That warning line is the cheapest security audit you will ever run.
 
