@@ -1,8 +1,9 @@
 # Azure articles
 
-Long-form, hands-on write-ups about running things on Azure. Each folder is one
-article in dev.to front-matter format, with its screenshots alongside, so the
-same file can be published as-is and read on GitHub.
+Long-form, hands-on write-ups about running things on Azure. Each folder holds
+one article: `README.md` is the dev.to source with front matter, `medium.md` is
+the Medium-ready copy generated from it, `linkedin-post.md` is the announcement,
+and `img/` holds the screenshots.
 
 | article | companion repo |
 |---|---|
