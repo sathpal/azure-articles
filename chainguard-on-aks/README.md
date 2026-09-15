@@ -80,7 +80,7 @@ WORKDIR /app
 COPY --from=builder --chown=nonroot:nonroot /home/nonroot/venv /app/venv
 COPY --chown=nonroot:nonroot app/main.py .
 ENV PATH="/app/venv/bin:$PATH" IMAGE_FLAVOR=chainguard
-USER nonroot
+USER 65532
 ENTRYPOINT ["python", "main.py"]
 ```
 
@@ -220,7 +220,7 @@ securityContext:
 
 Try the same block on the upstream image and the pod fails `runAsNonRoot` immediately, because the image runs as uid 0.
 
-The `runAsUser: 65532` line is not decoration. The Chainguard base image declares its user numerically, but my Dockerfile overrides it with `USER nonroot`, a name, and the kubelet refuses to start a `runAsNonRoot` container when it cannot prove the user is non-root from a name alone. Either write `USER 65532` in the Dockerfile or pin the uid in the pod spec; I did the latter so the fix is visible in the manifest. My first rollout sat in `CreateContainerConfigError` with exactly that message:
+The `runAsUser: 65532` line is not decoration. The Chainguard base image declares its user numerically, but my first Dockerfile overrode it with `USER nonroot`, a name, and the kubelet refuses to start a `runAsNonRoot` container when it cannot prove the user is non-root from a name alone. The Dockerfile above now says `USER 65532`, and the manifest pins the same uid so the check holds even if someone changes the image later. My first rollout sat in `CreateContainerConfigError` with exactly that message:
 
 ```
 Error: container has runAsNonRoot and image has non-numeric user (nonroot),
