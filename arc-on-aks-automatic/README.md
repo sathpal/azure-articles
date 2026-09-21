@@ -10,7 +10,7 @@ On 17 September 2026 the AKS engineering blog published [Running GitHub Actions 
 
 I followed it from a subscription that had never run AKS Automatic, and this post is what happened, command by command, with the real output. Most of it went exactly as written. Three things did not, and those are the useful parts.
 
-**Everything here is in one folder:** [github.com/sathpal/azure-articles/arc-on-aks-automatic](https://github.com/sathpal/azure-articles/tree/main/arc-on-aks-automatic). The `demo/` subfolder has the values files, an env template and a `run.sh` that does each stage. The validation workflow lives at the repo root under `.github/workflows/`, because that is where GitHub looks for it.
+**Repo:** [github.com/sathpal/arc-aks-automatic-demo](https://github.com/sathpal/arc-aks-automatic-demo). One `make` target per step, a screenshot of each, a troubleshooting section for everything that went wrong, and the validation workflow. Fork it, set your GitHub user in `.env`, and the runners register against your fork.
 
 ## What AKS Automatic changes
 
@@ -204,6 +204,8 @@ az group delete --name rg-arc-auto-lab --yes --no-wait
 
 The resource group delete also removes the node resource group AKS created.
 
+One more thing I learned by doing it wrong. I moved the runner set from one repository to another with `helm upgrade` and a new `githubConfigUrl`. The listener crashed on every start with "No runner scale set found with identifier 1": the set had kept the ID it registered under the first repository, and the second one had no such ID. Uninstall and reinstall is the only clean path, and if a stale `AutoscalingListener` object survives that, delete it and the controller recreates it in seconds.
+
 ## What I would tell a colleague
 
 - **It works as described.** The blog's values files are correct and complete for Safeguards. Copy them.
@@ -216,9 +218,9 @@ The resource group delete also removes the node resource group AKS created.
 ## Try it
 
 ```bash
-git clone https://github.com/sathpal/azure-articles && cd azure-articles/arc-on-aks-automatic/demo
-cp env.example env.sh && $EDITOR env.sh      # region, names, your GitHub owner/repo
-export GITHUB_TOKEN=<pat with repo scope>
-source env.sh && ./run.sh cluster && ./run.sh arc && ./run.sh runners && ./run.sh test
-./run.sh cleanup
+gh repo fork sathpal/arc-aks-automatic-demo --clone && cd arc-aks-automatic-demo
+make tools && cp .env.example .env         # set GITHUB_OWNER to your user
+make quota && make cluster && make access && make arc
+export GITHUB_TOKEN=$(gh auth token) && make runners && make test
+make cleanup
 ```

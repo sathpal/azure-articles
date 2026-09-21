@@ -8,4 +8,4 @@ and `img/` holds the screenshots.
 | article | companion repo |
 |---|---|
 | [Same app, two base images: 178 CVEs vs 5. A hands-on Chainguard on AKS walkthrough](chainguard-on-aks/README.md) | [chainguard-aks-demo](https://github.com/sathpal/chainguard-aks-demo) |
-| [Running GitHub Actions Runner Controller on AKS Automatic: the blog post, executed end to end](arc-on-aks-automatic/README.md) | [arc-on-aks-automatic/demo](arc-on-aks-automatic/demo) in this repo |
+| [Running GitHub Actions Runner Controller on AKS Automatic: the blog post, executed end to end](arc-on-aks-automatic/README.md) | [arc-aks-automatic-demo](https://github.com/sathpal/arc-aks-automatic-demo) |
