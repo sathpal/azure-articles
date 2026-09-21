@@ -11,7 +11,6 @@ under Story settings > Advanced to the dev.to URL.
 
 Tags (max 5): Kubernetes, Azure, GitHub Actions, DevOps, Platform Engineering
 -->
-
 # Running GitHub Actions Runner Controller on AKS Automatic: the blog post, executed end to end
 
 *I ran the AKS team's ARC on AKS Automatic guide from a clean subscription: quota, cluster, controller, scale-to-zero runners, node auto-provisioning and Deployment Safeguards, with every output captured.*
@@ -218,14 +217,15 @@ The resource group delete also removes the node resource group AKS created.
 
 One more thing I learned by doing it wrong. I moved the runner set from one repository to another with `helm upgrade` and a new `githubConfigUrl`. The listener crashed on every start with "No runner scale set found with identifier 1": the set had kept the ID it registered under the first repository, and the second one had no such ID. Uninstall and reinstall is the only clean path, and if a stale `AutoscalingListener` object survives that, delete it and the controller recreates it in seconds.
 
-## What I would tell a colleague
+## Where I landed
 
-- **It works as described.** The blog's values files are correct and complete for Safeguards. Copy them.
-- **Budget an hour for the first cluster.** 33 minutes to create, plus the quota round trip if your subscription is at defaults. Check `az vm list-usage -l <region> -o table` before you start and request the increase first.
-- **Keep the CLI current.** The preview extension is not the thing that enables Automatic; the CLI version is.
-- **Safeguards are mostly warnings.** Only a few policies deny. Read the warnings anyway; they are the same list a security review would produce.
-- **Node auto-provisioning is the quiet win.** Zero runner nodes at rest, a right-sized node in two minutes when a job lands, and consolidation to a cheaper size afterwards with the saving printed in the event log.
-- **Use a GitHub App for anything shared.** The PAT path is fine for a lab and wrong for a team.
+If someone on my team asked whether to run our Actions runners this way, I would say yes, with two caveats that are about Azure rather than ARC.
+
+The ARC side is boring in the best sense. Steve's values files are exactly what the cluster demands, the charts install first time, and the runner behaves like a hosted runner from the workflow's point of view. I did not change a line of the workflow. What I spent my time on was getting a cluster at all: the quota round trip and the CLI upgrade took longer than everything after them combined, and neither is mentioned in the post because a Microsoft engineer's subscription does not have those problems. Yours might. Run `az vm list-usage` for your region before you type `az aks create`, and check the CLI version before you add any extension.
+
+The thing that changed my mind about AKS Automatic was not the cluster creation, which is slow, or Safeguards, which mostly nag. It was watching Karpenter after the job finished. It had bought a D4as_v6 for the runner, noticed twenty minutes later that the node was underused, priced a cheaper D4als_v6, launched it, moved the pods, and deleted the original. It printed the saving in the event log. I have written that logic by hand for other clusters and never got it this tidy.
+
+The caveat on the ARC side is the token. I used my own PAT because it was a lab and I wanted to get to the interesting part. Do not do that for a team. A GitHub App gives the runner set its own identity with the permissions it needs and nothing else, and rotation stops being someone's memory.
 
 ## Try it
 
