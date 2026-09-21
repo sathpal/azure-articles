@@ -1,0 +1,31 @@
+# gha-runner-scale-set values. GITHUB_CONFIG_URL is substituted by envsubst in run.sh.
+githubConfigUrl: ${GITHUB_CONFIG_URL}
+githubConfigSecret: github-pat
+minRunners: 0
+maxRunners: 3
+listenerTemplate:
+  spec:
+    containers:
+      - name: listener
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+template:
+  spec:
+    containers:
+      - name: runner
+        # Pinned tag: Deployment Safeguards reject the floating :latest tag.
+        # Keep this at the current release from https://github.com/actions/runner/releases
+        image: ghcr.io/actions/actions-runner:2.337.0
+        command: ["/home/runner/run.sh"]
+        resources:
+          requests:
+            cpu: "2"
+            memory: 4Gi
+          limits:
+            cpu: "2"
+            memory: 4Gi
